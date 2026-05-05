@@ -1,0 +1,43 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.swp
+
+# .NET secrets
+**/appsettings.Local.json
+**/appsettings.*.Local.json
+**/secrets.json
+
+# EF Core migrations (optional — we keep migrations)
+# **/Migrations/
+
+# Rider / JetBrains
+.idea/
+*.sln.iml
+
+# VS Code
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# Docker
+.dockerignore
+
+# Node (for future frontend)
+node_modules/
+dist/
+.env
+.env.local
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test results
+TestResults/
+coverage/
+*.coverage
