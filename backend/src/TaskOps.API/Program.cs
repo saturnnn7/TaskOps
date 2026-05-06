@@ -1,5 +1,6 @@
 using TaskOps.API.Extensions;
 using TaskOps.API.Options;
+using TaskOps.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,7 @@ builder.Services.AddAuthorization();
 
 // ── Cache ─────────────────────────────────────────────────────────────────────
 builder.Services.AddRedisCache(builder.Configuration);
+builder.Services.AddInfrastructure(builder.Configuration);
 
 // ── Swagger ───────────────────────────────────────────────────────────────────
 builder.Services.AddEndpointsApiExplorer();
