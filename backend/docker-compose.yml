@@ -1,0 +1,66 @@
+services:
+
+  # ──────────────────────────────────────────
+  # PostgreSQL 16
+  # ──────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: taskops-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: taskops
+      POSTGRES_USER: taskops_user
+      POSTGRES_PASSWORD: taskops_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U taskops_user -d taskops"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ──────────────────────────────────────────
+  # Redis 7
+  # ──────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: taskops-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ──────────────────────────────────────────
+  # TaskOps API
+  # ──────────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: taskops-api
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__DefaultConnection: >
+        Host=postgres;Port=5432;Database=taskops;
+        Username=taskops_user;Password=taskops_pass
+      ConnectionStrings__Redis: redis:6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  redis_data:
