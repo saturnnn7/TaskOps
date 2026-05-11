@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using TaskOps.API.Options;
+using TaskOps.Application.Common.Options;
+using System.Security.Cryptography;
 
 namespace TaskOps.API.Extensions;
 
@@ -56,17 +58,19 @@ public static class ServiceCollectionExtensions
     /// Registers JWT Bearer authentication with RS256 public key validation.
     /// Private key is used only for token signing in Infrastructure layer.
     /// </summary>
-    public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddJwtAuthentication(
+    this IServiceCollection services,
+    IConfiguration configuration)
     {
         var jwtOptions = configuration
             .GetSection(JwtOptions.SectionName)
             .Get<JwtOptions>()!;
-        
+
         services
             .AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme; 
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
             .AddJwtBearer(options =>
             {
@@ -78,12 +82,17 @@ public static class ServiceCollectionExtensions
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = jwtOptions.Issuer,
                     ValidAudience = jwtOptions.Audience,
-                    ClockSkew = TimeSpan.Zero               // No tolerance for expired tokens
+                    ClockSkew = TimeSpan.Zero,
+                    // Load public key from PEM file for RS256 verification
+                    IssuerSigningKeyResolver = (_, _, _, _) =>
+                    {
+                        var rsa = RSA.Create();
+                        rsa.ImportFromPem(File.ReadAllText(jwtOptions.PublicKeyPath));
+                        return [new RsaSecurityKey(rsa)];
+                    }
                 };
-                // RS256 public key will be injected here in the next step
-                // when we set up the Infrastructure auth layer
             });
-        
+
         return services;
     }
 

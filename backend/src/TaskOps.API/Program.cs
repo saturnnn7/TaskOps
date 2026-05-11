@@ -1,18 +1,32 @@
+using FluentValidation;
 using TaskOps.API.Extensions;
+using TaskOps.API.Middleware;
 using TaskOps.API.Options;
+using TaskOps.Application.Common.Interfaces;
+using TaskOps.Application.Services;
+using TaskOps.Application.Validators;
 using TaskOps.Infrastructure;
+using TaskOps.Application.Common.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ── Options ──────────────────────────────────────────────────────────────────
+// ── Options ───────────────────────────────────────────────────────────────────
 builder.Services.Configure<JwtOptions>(
     builder.Configuration.GetSection(JwtOptions.SectionName));
-
 builder.Services.Configure<SwaggerOptions>(
     builder.Configuration.GetSection(SwaggerOptions.SectionName));
 
-// ── Controllers ──────────────────────────────────────────────────────────────
+// ── Controllers ───────────────────────────────────────────────────────────────
 builder.Services.AddControllers();
+
+// ── Infrastructure (EF Core, Redis, Auth) ────────────────────────────────────
+builder.Services.AddInfrastructure(builder.Configuration);
+
+// ── Application services ──────────────────────────────────────────────────────
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+// ── Validation ────────────────────────────────────────────────────────────────
+builder.Services.AddValidatorsFromAssemblyContaining<RegisterDtoValidator>();
 
 // ── Authentication & Authorization ───────────────────────────────────────────
 builder.Services.AddJwtAuthentication(builder.Configuration);
@@ -20,17 +34,19 @@ builder.Services.AddAuthorization();
 
 // ── Cache ─────────────────────────────────────────────────────────────────────
 builder.Services.AddRedisCache(builder.Configuration);
-builder.Services.AddInfrastructure(builder.Configuration);
 
 // ── Swagger ───────────────────────────────────────────────────────────────────
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerWithJwt();
 
-// ──────────────────────────────────────────────────────────────────────────────
-
+// ─────────────────────────────────────────────────────────────────────────────
 var app = builder.Build();
 
-// ── Swagger middleware (dev + if enabled) ─────────────────────────────────────
+// ── Global middleware ─────────────────────────────────────────────────────────
+app.UseMiddleware<ExceptionHandlerMiddleware>();
+app.UseMiddleware<ValidationMiddleware>();
+
+// ── Swagger UI ────────────────────────────────────────────────────────────────
 var swaggerOptions = app.Configuration
     .GetSection(SwaggerOptions.SectionName)
     .Get<SwaggerOptions>();
@@ -45,7 +61,7 @@ if (swaggerOptions?.Enabled == true)
     });
 }
 
-// ── Middleware pipeline ───────────────────────────────────────────────────────
+// ── Pipeline ──────────────────────────────────────────────────────────────────
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

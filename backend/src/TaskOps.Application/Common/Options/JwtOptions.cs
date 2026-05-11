@@ -1,4 +1,4 @@
-namespace TaskOps.API.Options;
+namespace TaskOps.Application.Common.Options;
 
 /// <summary>
 /// Strongly-typed JWT configuration bound from appsettings.json "Jwt" section.
@@ -11,4 +11,6 @@ public sealed class JwtOptions
     public string Audience { get; init; } = string.Empty;
     public int AccessTokenExpirationMinutes { get; init; } = 15;
     public int RefreshTokenExpirationDays { get; init; } = 7;
+    public string PrivateKeyPath { get; init; } = string.Empty;
+    public string PublicKeyPath { get; init; } = string.Empty;
 }
