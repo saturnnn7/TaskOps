@@ -83,12 +83,12 @@ public static class ServiceCollectionExtensions
                     ValidIssuer = jwtOptions.Issuer,
                     ValidAudience = jwtOptions.Audience,
                     ClockSkew = TimeSpan.Zero,
-                    // Load public key from PEM file for RS256 verification
                     IssuerSigningKeyResolver = (_, _, _, _) =>
                     {
                         var rsa = RSA.Create();
                         rsa.ImportFromPem(File.ReadAllText(jwtOptions.PublicKeyPath));
-                        return [new RsaSecurityKey(rsa)];
+                        var publicKey = new RsaSecurityKey(rsa);
+                        return [publicKey];
                     }
                 };
             });

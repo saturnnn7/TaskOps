@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using Microsoft.EntityFrameworkCore;
 using TaskOps.Domain.Entities;
 using TaskOps.Domain.Enums;

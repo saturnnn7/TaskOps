@@ -4,6 +4,8 @@ using TaskOps.Domain.Common;
 using TaskOps.Domain.Entities;
 using TaskOps.Domain.Errors;
 using TaskOps.Domain.Interfaces;
+using Microsoft.Extensions.Options;
+using TaskOps.Application.Common.Options;
 
 namespace TaskOps.Application.Services;
 
@@ -12,15 +14,18 @@ public sealed class AuthService : IAuthService
     private readonly IUnitOfWork _unitOfWork;
     private readonly IPasswordService _passwordService;
     private readonly ITokenService _tokenService;
+    private readonly JwtOptions _jwtOptions;
 
     public AuthService(
         IUnitOfWork unitOfWork,
         IPasswordService passwordService,
-        ITokenService tokenService)
+        ITokenService tokenService,
+        IOptions<JwtOptions> jwtOptions)
     {
         _unitOfWork = unitOfWork;
         _passwordService = passwordService;
         _tokenService = tokenService;
+        _jwtOptions = jwtOptions.Value;
     }
 
     public async Task<Result<AuthResponseDto>> RegisterAsync(
@@ -108,7 +113,7 @@ public sealed class AuthService : IAuthService
     {
         var accessToken = _tokenService.GenerateAccessToken(user);
         var refreshToken = _tokenService.GenerateRefreshToken();
-        var expiresAt = DateTime.UtcNow.AddMinutes(15);
+        var expiresAt = DateTime.UtcNow.AddMinutes(_jwtOptions.AccessTokenExpirationMinutes);
 
         await _tokenService.SaveRefreshTokenAsync(
             user.Id, refreshToken, ipAddress, cancellationToken);

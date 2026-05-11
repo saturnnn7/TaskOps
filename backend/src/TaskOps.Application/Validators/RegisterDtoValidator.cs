@@ -10,7 +10,7 @@ public sealed class RegisterDtoValidator : AbstractValidator<RegisterDto>
         RuleFor(x => x.Email)
             .NotEmpty().WithMessage("Email is required.")
             .EmailAddress().WithMessage("Email is not valid.")
-            .MaximumLength(254).WithMessage("Email must not exceed 256 characters.");
+            .MaximumLength(254).WithMessage("Email must not exceed 254 characters.");
         
         RuleFor(x => x.DisplayName)
             .NotEmpty().WithMessage("Display name is required.")
