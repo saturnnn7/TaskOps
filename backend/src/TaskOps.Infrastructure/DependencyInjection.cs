@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using TaskOps.Domain.Interfaces;
 using TaskOps.Infrastructure.Persistence;
 
 namespace TaskOps.Infrastructure;
@@ -18,12 +19,12 @@ public static class DependencyInjection
 
         // PostgreSQL via EF Core
         services.AddDbContext<AppDbContext>(options =>
-        {
             options.UseNpgsql(
                 configuration.GetConnectionString("DefaultConnection"),
                 npgsql => npgsql.MigrationsAssembly(
-                    typeof(AppDbContext).Assembly.FullName));
-        });
+                    typeof(AppDbContext).Assembly.FullName)));
+
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;
     }
