@@ -12,7 +12,7 @@ public class TaskItem : BaseEntity
     public Guid ProjectId { get; set; }
 
     /// <summary>Optional: task assigned to a specific user.</summary>
-    public Guid? AssignedId { get; set; }
+    public Guid? AssigneeId { get; set; }
 
     /// <summary>User who created this task.</summary>
     public Guid CreatedById { get; set; }
@@ -34,7 +34,7 @@ public class TaskItem : BaseEntity
 
     // Navigation properties
     public Project Project { get; set; } = null!;
-    public User? Assigned { get; set; }
+    public User? Assignee { get; set; }
     public User CreatedBy { get; set; } = null!;
     public ICollection<Comment> Comments { get; set; } = [];
 }

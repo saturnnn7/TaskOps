@@ -210,10 +210,8 @@ namespace TaskOps.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .ValueGeneratedOnAdd()
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)")
-                        .HasDefaultValue("Todo")
                         .HasColumnName("status");
 
                     b.Property<string>("Title")

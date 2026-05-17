@@ -12,8 +12,8 @@ using TaskOps.Infrastructure.Persistence;
 namespace TaskOps.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260506173720_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260517210753_FixEnumDefaults")]
+    partial class FixEnumDefaults
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -213,10 +213,8 @@ namespace TaskOps.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .ValueGeneratedOnAdd()
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)")
-                        .HasDefaultValue("Todo")
                         .HasColumnName("status");
 
                     b.Property<string>("Title")

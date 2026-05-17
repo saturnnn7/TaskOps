@@ -12,8 +12,8 @@ using TaskOps.Infrastructure.Persistence;
 namespace TaskOps.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260511223414_FixEmailLengthAndRoleSentinel")]
-    partial class FixEmailLengthAndRoleSentinel
+    [Migration("20260517210209_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

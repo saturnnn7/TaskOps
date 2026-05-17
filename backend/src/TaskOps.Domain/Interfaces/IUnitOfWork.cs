@@ -1,5 +1,6 @@
-namespace TaskOps.Domain.Interfaces;
 using TaskOps.Domain.Entities;
+
+namespace TaskOps.Domain.Interfaces;
 
 /// <summary>
 /// Unit of Work pattern — wraps all repositories under a single transaction.

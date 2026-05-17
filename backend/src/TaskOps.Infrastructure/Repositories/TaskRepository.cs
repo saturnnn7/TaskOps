@@ -26,7 +26,7 @@ public sealed class TaskRepository : BaseRepository<TaskItem>, ITaskRepository
             query = query.Where(t => t.Status == status.Value);
 
         if (assigneeId.HasValue)
-            query = query.Where(t => t.AssignedId == assigneeId.Value);
+            query = query.Where(t => t.AssigneeId == assigneeId.Value);
 
         query = query.OrderBy(t => t.Position).ThenByDescending(t => t.CreatedAt);
 

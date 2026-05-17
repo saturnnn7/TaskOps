@@ -60,6 +60,7 @@ Common/
   ICurrentUserService.cs
   IPasswordService.cs
   IProjectService.cs
+  ITaskService.cs
   ITokenService.cs
  Models/
   ApiError.cs
@@ -80,6 +81,11 @@ DTOs/Projects/
  ProjectDto.cs
  ProjectMemberDto.cs
  UpdateProjectDto.cs
+DTOs/Tasks/
+ CreateTaskDto.cs
+ GetTasksQuery.cs
+ TaskDto.cs
+ UpdateTaskDto.cs
 obj/Debug/net8.0/
  .NETCoreApp,Version=v8.0.AssemblyAttributes.cs
  TaskOps.Application.AssemblyInfo.cs
@@ -87,11 +93,14 @@ obj/Debug/net8.0/
 Services/
  AuthService.cs
  ProjectService.cs
+ TaskService.cs
 Validators/
  CreateProjectDtoValidator.cs
+ CreateTaskDtoValidator.cs
  LoginDtoValidator.cs
  RegisterDtoValidator.cs
  UpdateProjectDtoValidator.cs
+ UpdateTaskDtoValidator.cs
 
 [metadataReferences]
 ../TaskOps.Domain/obj/Debug/net8.0/ref/TaskOps.Domain.dll

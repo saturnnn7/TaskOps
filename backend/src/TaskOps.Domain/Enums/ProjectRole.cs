@@ -7,11 +7,11 @@ namespace TaskOps.Domain.Enums;
 public enum ProjectRole
 {
     /// <summary>Full control: edit/delete project, manage members.</summary>
-    Owner = 0,
+    Viewer = 2,
 
     /// <summary>Can create and manage tasks, cannot delete project.</summary>
     Member = 1,
 
     /// <summary>Read-only access to project and tasks.</summary>
-    Viewer = 2
+    Owner = 0
 }

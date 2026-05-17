@@ -19,7 +19,7 @@ public sealed class TaskItemConfiguration : IEntityTypeConfiguration<TaskItem>
         builder.Property(t => t.ProjectId)
             .HasColumnName("project_id");
 
-        builder.Property(t => t.AssignedId)
+        builder.Property(t => t.AssigneeId)
             .HasColumnName("assignee_id");
 
         builder.Property(t => t.CreatedById)
@@ -37,9 +37,7 @@ public sealed class TaskItemConfiguration : IEntityTypeConfiguration<TaskItem>
         builder.Property(t => t.Status)
             .HasColumnName("status")
             .HasConversion<string>()
-            .HasMaxLength(20)
-            .HasDefaultValue(WorkTaskStatus.Todo)
-            .HasSentinel(WorkTaskStatus.Backlog);
+            .HasMaxLength(20);
 
         builder.Property(t => t.Priority)
             .HasColumnName("priority")
@@ -65,12 +63,12 @@ public sealed class TaskItemConfiguration : IEntityTypeConfiguration<TaskItem>
             .HasDatabaseName("ix_tasks_project_status");
 
         // Index for fast assignee queries: all tasks assigned to a user
-        builder.HasIndex(t => t.AssignedId)
+        builder.HasIndex(t => t.AssigneeId)
             .HasDatabaseName("ix_tasks_assignee");
 
-        builder.HasOne(t => t.Assigned)
+        builder.HasOne(t => t.Assignee)
             .WithMany(u => u.AssignedTasks)
-            .HasForeignKey(t => t.AssignedId)
+            .HasForeignKey(t => t.AssigneeId)
             .OnDelete(DeleteBehavior.SetNull);
 
         builder.HasOne(t => t.CreatedBy)

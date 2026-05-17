@@ -57,6 +57,7 @@ Controllers/
  AuthController.cs
  BaseController.cs
  ProjectsController.cs
+ TasksController.cs
 Extensions/ServiceCollectionExtensions.cs
 Middleware/
  ExceptionHandlerMiddleware.cs

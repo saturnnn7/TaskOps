@@ -71,10 +71,10 @@ Persistence/
   UserConfiguration.cs
  Interceptors/AuditInterceptor.cs
  Migrations/
-  20260506173720_InitialCreate.cs
-  20260506173720_InitialCreate.Designer.cs
-  20260511223414_FixEmailLengthAndRoleSentinel.cs
-  20260511223414_FixEmailLengthAndRoleSentinel.Designer.cs
+  20260517210209_InitialCreate.cs
+  20260517210209_InitialCreate.Designer.cs
+  20260517210753_FixEnumDefaults.cs
+  20260517210753_FixEnumDefaults.Designer.cs
   AppDbContextModelSnapshot.cs
  UnitOfWork.cs
 Repositories/
