@@ -39,6 +39,7 @@ public sealed class ProjectRepository : BaseRepository<Project>, IProjectReposit
 
     public async Task<Project?> GetWithMembersAsync(Guid projectId, CancellationToken cancellationToken = default)
         => await DbSet
+            .AsNoTracking()
             .Include(p => p.Members)
             .FirstOrDefaultAsync(p => p.Id == projectId, cancellationToken);
 

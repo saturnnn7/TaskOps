@@ -7,6 +7,7 @@ using TaskOps.Application.Services;
 using TaskOps.Application.Validators;
 using TaskOps.Infrastructure;
 using TaskOps.Application.Common.Options;
+using TaskOps.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,9 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 // ── Application services ──────────────────────────────────────────────────────
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+builder.Services.AddScoped<IProjectService, ProjectService>();
 
 // ── Validation ────────────────────────────────────────────────────────────────
 builder.Services.AddValidatorsFromAssemblyContaining<RegisterDtoValidator>();

@@ -26,8 +26,8 @@ public sealed class ProjectMemberConfiguration : IEntityTypeConfiguration<Projec
             .HasColumnName("role")
             .HasConversion<string>()
             .HasMaxLength(20)
-            .HasDefaultValue(ProjectRole.Member)
-            .HasSentinel(ProjectRole.Owner);
+            .HasDefaultValue(ProjectRole.Member);
+            
 
         builder.Property(pm => pm.JoinedAt)
             .HasColumnName("joined_at");

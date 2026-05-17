@@ -19,7 +19,7 @@ public sealed class TaskItemConfiguration : IEntityTypeConfiguration<TaskItem>
         builder.Property(t => t.ProjectId)
             .HasColumnName("project_id");
 
-        builder.Property(t => t.AssigneeId)
+        builder.Property(t => t.AssignedId)
             .HasColumnName("assignee_id");
 
         builder.Property(t => t.CreatedById)
@@ -65,12 +65,12 @@ public sealed class TaskItemConfiguration : IEntityTypeConfiguration<TaskItem>
             .HasDatabaseName("ix_tasks_project_status");
 
         // Index for fast assignee queries: all tasks assigned to a user
-        builder.HasIndex(t => t.AssigneeId)
+        builder.HasIndex(t => t.AssignedId)
             .HasDatabaseName("ix_tasks_assignee");
 
-        builder.HasOne(t => t.Assignee)
+        builder.HasOne(t => t.Assigned)
             .WithMany(u => u.AssignedTasks)
-            .HasForeignKey(t => t.AssigneeId)
+            .HasForeignKey(t => t.AssignedId)
             .OnDelete(DeleteBehavior.SetNull);
 
         builder.HasOne(t => t.CreatedBy)

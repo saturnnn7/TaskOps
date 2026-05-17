@@ -1,5 +1,6 @@
 using TaskOps.Domain.Interfaces;
 using TaskOps.Infrastructure.Repositories;
+using TaskOps.Domain.Entities;
 
 namespace TaskOps.Infrastructure.Persistence;
 
@@ -15,6 +16,7 @@ public sealed class UnitOfWork : IUnitOfWork
     public IProjectRepository Projects { get; }
     public ITaskRepository Tasks { get; }
     public ICommentRepository Comments { get; }
+    public IRepository<ProjectMember> ProjectMembers { get; }
 
     public UnitOfWork(AppDbContext context)
     {
@@ -23,6 +25,7 @@ public sealed class UnitOfWork : IUnitOfWork
         Projects = new ProjectRepository(context);
         Tasks = new TaskRepository(context);
         Comments = new CommentRepository(context);
+        ProjectMembers = new BaseRepository<ProjectMember>(context);
     }
 
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

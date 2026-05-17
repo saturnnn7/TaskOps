@@ -8,7 +8,7 @@ namespace TaskOps.Infrastructure.Repositories;
 
 public sealed class TaskRepository : BaseRepository<TaskItem>, ITaskRepository
 {
-    public TaskRepository(AppDbContext context) : base(context) {}
+    public TaskRepository(AppDbContext context) : base(context) { }
 
     public async Task<(IReadOnlyList<TaskItem> Items, int TotalCount)> GetProjectTasksAsync(
         Guid projectId,
@@ -21,13 +21,13 @@ public sealed class TaskRepository : BaseRepository<TaskItem>, ITaskRepository
         var query = DbSet
             .Where(t => t.ProjectId == projectId)
             .AsQueryable();
-        
+
         if (status.HasValue)
             query = query.Where(t => t.Status == status.Value);
-        
+
         if (assigneeId.HasValue)
-            query = query.Where(t => t.AssigneeId == assigneeId.Value);
-        
+            query = query.Where(t => t.AssignedId == assigneeId.Value);
+
         query = query.OrderBy(t => t.Position).ThenByDescending(t => t.CreatedAt);
 
         var totalCount = await query.CountAsync(cancellationToken);
@@ -36,7 +36,7 @@ public sealed class TaskRepository : BaseRepository<TaskItem>, ITaskRepository
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync(cancellationToken);
-        
+
         return (items, totalCount);
     }
 
@@ -56,7 +56,7 @@ public sealed class TaskRepository : BaseRepository<TaskItem>, ITaskRepository
         var max = await DbSet
             .Where(t => t.ProjectId == projectId && t.Status == status)
             .MaxAsync(t => (int?)t.Position, cancellationToken);
-        
+
         return max ?? 0;
     }
 }

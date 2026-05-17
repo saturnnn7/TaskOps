@@ -1,4 +1,5 @@
 namespace TaskOps.Domain.Interfaces;
+using TaskOps.Domain.Entities;
 
 /// <summary>
 /// Unit of Work pattern — wraps all repositories under a single transaction.
@@ -10,6 +11,7 @@ public interface IUnitOfWork : IDisposable
     IProjectRepository Projects { get; }
     ITaskRepository Tasks { get; }
     ICommentRepository Comments { get; }
+    IRepository<ProjectMember> ProjectMembers { get; }
 
     /// <summary>
     /// Commits all pending changes to the database in a single transaction.

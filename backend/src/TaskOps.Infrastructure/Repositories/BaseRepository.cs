@@ -10,12 +10,12 @@ namespace TaskOps.Infrastructure.Repositories;
 /// Generic repository implementation using EF Core.
 /// Provides standard CRUD operations for all entities.
 /// </summary>
-public abstract class BaseRepository<TEntity> : IRepository<TEntity>
+public class BaseRepository<TEntity> : IRepository<TEntity>
     where TEntity : BaseEntity
 {
     protected readonly AppDbContext Context;
     protected readonly DbSet<TEntity> DbSet;
-    protected BaseRepository(AppDbContext context)
+    public BaseRepository(AppDbContext context)
     {
         Context = context;
         DbSet = context.Set<TEntity>();
