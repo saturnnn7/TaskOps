@@ -19,4 +19,7 @@ public static class UserErrors
 
     public static Error EmailNotVerified() =>
         Error.Forbidden("User.EmailNotVerified", "Please verify your email before logging in.");
+    
+    public static Error WrongCurrentPassword() =>
+        Error.Conflict("User.WrongCurrentPassword", "Current password is incorrect.");
 }
