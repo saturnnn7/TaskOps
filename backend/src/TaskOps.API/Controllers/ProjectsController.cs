@@ -61,16 +61,8 @@ public sealed class ProjectsController : BaseController
         [FromBody] CreateProjectDto dto,
         CancellationToken cancellationToken)
     {
-        var validation = await _createValidator.ValidateAsync(dto, cancellationToken);
-        if (!validation.IsValid)
-        {
-            var details = validation.Errors
-                .GroupBy(e => e.PropertyName)
-                .ToDictionary(g => g.Key, g => g.Select(e => e.ErrorMessage).ToArray());
-
-            return UnprocessableEntity(ApiResponse<object>.Fail(
-                ApiError.From("Validation.Failed", "One or more validation errors occurred.", details)));
-        }
+        var error = await ValidateAsync(_createValidator, dto, cancellationToken);
+        if (error is not null) return error;
 
         var result = await _projectService.CreateAsync(
             _currentUser.UserId, dto, cancellationToken);
@@ -85,16 +77,8 @@ public sealed class ProjectsController : BaseController
         [FromBody] UpdateProjectDto dto,
         CancellationToken cancellationToken)
     {
-        var validation = await _updateValidator.ValidateAsync(dto, cancellationToken);
-        if (!validation.IsValid)
-        {
-            var details = validation.Errors
-                .GroupBy(e => e.PropertyName)
-                .ToDictionary(g => g.Key, g => g.Select(e => e.ErrorMessage).ToArray());
-
-            return UnprocessableEntity(ApiResponse<object>.Fail(
-                ApiError.From("Validation.Failed", "One or more validation errors occurred.", details)));
-        }
+        var error = await ValidateAsync(_updateValidator, dto, cancellationToken);
+        if (error is not null) return error;
 
         var result = await _projectService.UpdateAsync(
             id, _currentUser.UserId, dto, cancellationToken);

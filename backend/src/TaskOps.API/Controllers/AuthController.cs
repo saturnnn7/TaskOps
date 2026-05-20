@@ -35,19 +35,8 @@ public sealed class AuthController : BaseController
         CancellationToken cancellationToken)
     {
         // Validate input before hitting the service
-        var validation = await _registerValidator.ValidateAsync(dto, cancellationToken);
-        if (!validation.IsValid)
-        {
-            var details = validation.Errors
-                .GroupBy(e => e.PropertyName)
-                .ToDictionary(
-                    g => g.Key,
-                    g => g.Select(e => e.ErrorMessage).ToArray());
-
-            return UnprocessableEntity(ApiResponse<object>.Fail(
-                ApiError.From("Validation.Failed",
-                    "One or more validation errors occurred.", details)));
-        }
+        var error = await ValidateAsync(_registerValidator, dto, cancellationToken);
+        if (error is not null) return error;
 
         var result = await _authService.RegisterAsync(dto, cancellationToken);
         return HandleResult(result);
@@ -60,19 +49,8 @@ public sealed class AuthController : BaseController
         [FromBody] LoginDto dto,
         CancellationToken cancellationToken)
     {
-        var validation = await _loginValidator.ValidateAsync(dto, cancellationToken);
-        if (!validation.IsValid)
-        {
-            var details = validation.Errors
-                .GroupBy(e => e.PropertyName)
-                .ToDictionary(
-                    g => g.Key,
-                    g => g.Select(e => e.ErrorMessage).ToArray());
-
-            return UnprocessableEntity(ApiResponse<object>.Fail(
-                ApiError.From("Validation.Failed",
-                    "One or more validation errors occurred.", details)));
-        }
+        var error = await ValidateAsync(_loginValidator, dto, cancellationToken);
+        if (error is not null) return error;
 
         var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
         var result = await _authService.LoginAsync(dto, ipAddress, cancellationToken);

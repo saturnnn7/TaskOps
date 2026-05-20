@@ -1,3 +1,4 @@
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using TaskOps.Application.Common.Models;
 using TaskOps.Domain.Common;
@@ -13,6 +14,26 @@ namespace TaskOps.API.Controllers;
 [Route("api/v1/[controller]")]
 public abstract class BaseController : ControllerBase
 {
+    /// <summary>
+    /// Validates a DTO using the injected validator.
+    /// Returns 422 with field errors if invalid, null if valid.
+    /// </summary>
+    protected async Task<IActionResult?> ValidateAsync<T>(
+        IValidator<T> validator,
+        T dto,
+        CancellationToken cancellationToken)
+    {
+        var validation = await validator.ValidateAsync(dto, cancellationToken);
+        if (validation.IsValid) return null;
+
+        var details = validation.Errors
+            .GroupBy(e => e.PropertyName)
+            .ToDictionary(g => g.Key, g => g.Select(e => e.ErrorMessage).ToArray());
+
+        return UnprocessableEntity(ApiResponse<object>.Fail(
+            ApiError.From("Validation.Failed", "One or more validation errors occurred.", details)));
+    }
+
     /// <summary>
     /// Maps a Result[T] to an appropriate HTTP response.
     /// Success → 200 OK with ApiResponse envelope.
