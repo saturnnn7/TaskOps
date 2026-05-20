@@ -22,11 +22,31 @@
 
 Clean layered architecture with strict unidirectional dependencies:
 
-src/
-├── TaskOps.Domain/          # Core domain: entities, enums, interfaces, domain errors
-├── TaskOps.Application/     # Business logic: services, DTOs, validators, use cases
-├── TaskOps.Infrastructure/  # External concerns: EF Core, Redis, JWT, hashing
-└── TaskOps.API/             # Web layer: controllers, middleware, DI composition
+### src
+
+- **TaskOps.Domain**
+  - Entities
+  - Enums
+  - Interfaces
+  - Domain errors
+
+- **TaskOps.Application**
+  - Services (business logic)
+  - DTOs
+  - Validators
+  - Use cases
+
+- **TaskOps.Infrastructure**
+  - EF Core (database)
+  - Redis (cache)
+  - JWT (auth)
+  - Password hashing
+
+- **TaskOps.API**
+  - Controllers
+  - Middleware
+  - Dependency Injection
+  - Filters
 
 **Key patterns:**
 - `Result<T>` — explicit success/failure instead of exceptions
