@@ -8,6 +8,7 @@ using TaskOps.Application.Validators;
 using TaskOps.Infrastructure;
 using TaskOps.Application.Common.Options;
 using TaskOps.API.Services;
+using TaskOps.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,6 +49,9 @@ builder.Services.AddSwaggerWithJwt();
 
 // ─────────────────────────────────────────────────────────────────────────────
 var app = builder.Build();
+
+// ── Database migration ───────────────────────────────────────────────────────
+await DatabaseMigrator.MigrateAsync(app.Services);
 
 // ── Global middleware ─────────────────────────────────────────────────────────
 app.UseMiddleware<ExceptionHandlerMiddleware>();
